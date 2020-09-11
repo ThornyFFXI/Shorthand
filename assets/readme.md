@@ -31,30 +31,30 @@ Shorthand will evaluate any commands beginning with any of these prefixes follow
 ### Commands
 All commands can be prefixed with /shorthand or /shh.
 
-* /shh export
+* /shh export<br>
 This exports a settings xml with the currently available spells/abilities/weaponskills to Ashita/config/shorthand/settings-empty.xml.  You can use this to copy/paste abilities easier, or copy it to your live settings.xml.
 
-* /shh reload
+* /shh reload<br>
 This reloads your current settings xml, located at Ashita/config/shorthand/settings.xml.
 
-* /shh packetws [optional: on/off]
+* /shh packetws [optional: on/off]<br>
 When enabled, this sends weaponskills via packets.  This allows you to ws disengaged.  Note that this will not apply to commands using any of the following targeting mechanisms:<br>
 bt, ht, ft, st, stpc, stnpc, stpt, stal, lastst, r, scan
 
-* /shh impact [optional: on/off]
+* /shh impact [optional: on/off]<br>
 When enabled, this modifies the game client to believe you currently know Impact.  This allows you to cast through menu, or by typing the command, without Twilight Cloak on.<br>
 Note that the server still requires Twilight Cloak equipped for cast to begin and complete, so you must equip it in the macro prior to the cast line or have Ashitacast configured to equip it in precast and midcast.
 
-* /shh honor [optional: on/off]
+* /shh honor [optional: on/off]<br>
 When enabled, this modifies the game client to believe you currently know Honor March.  This allows you to cast through menu, or by typing the command, without Marsyas on.<br>
 Note that the server still requires Marsyas equipped for cast to begin and complete, so you must equip it in the macro prior to the cast line or have Ashitacast configured to equip it in precast and midcast.
 
-* /shh dispelga [optional: on/off]
+* /shh dispelga [optional: on/off]<br>
 When enabled, this modifies the game client to believe you currently know Dispelga.  This allows you to cast through menu, or by typing the command, without Daybreak on.<br>
 Note that the server still requires Daybreak equipped for cast to begin and complete, so you must equip it in the macro prior to the cast line or have Ashitacast configured to equip it in precast and midcast.
 
-* /shh debug [optional: on/off]
+* /shh debug [optional: on/off]<br>
 When enabled, all typed commands will be printed to Ashita’s debug log.  You must have Ashita’s log level set to debug for them to be recorded.
 
-* /raw [required: command]
+* /raw [required: command]<br>
 This sends a command through to the game client without allowing shorthand to evaluate it.  The first 5 characters (/raw and the trailing space) are trimmed, everything else is left untouched.
