@@ -6,20 +6,12 @@ using namespace rapidxml;
 
 void Shorthand::CreateSettingsXml(bool basic)
 {
-	char buffer[1024];
-	if (basic)
-	{
-		sprintf_s(buffer, 1024, "%s\\config\\shorthand\\settings.xml", m_AshitaCore->GetInstallPath());
-	}
-	else
-	{
-		sprintf_s(buffer, 1024, "%s\\config\\shorthand\\settings-empty.xml", m_AshitaCore->GetInstallPath());
-	}
+    std::string Path = basic ? pSettings->GetDefaultSettingsPath() : pSettings->GetInputWritePath("empty.xml");
 
-	ofstream outstream(buffer);
+	ofstream outstream(Path.c_str());
 	if (!outstream.is_open())
 	{
-		pOutput->error_f("Failed to write file.  [%s]", buffer);
+		pOutput->error_f("Failed to write file.  [%s]", Path.c_str());
 		return;
 	}
 
@@ -90,77 +82,29 @@ void Shorthand::CreateSettingsXml(bool basic)
 
 	outstream << "</shorthand>";
 	outstream.close();
-	pOutput->message_f("Wrote settings XML. [$H%s$R]", buffer);
+	pOutput->message_f("Wrote settings XML. [$H%s$R]", Path.c_str());
 }
 
-void Shorthand::LoadSettingsXml()
+void Shorthand::LoadSettingsXml(bool forceReload)
 {
 	//Reset settings.
 	mSettings = settings_t(m_AshitaCore);
 
-	//Create path to settings XML.
-	char buffer[1024];
-	sprintf_s(buffer, 1024, "%s\\config\\shorthand\\settings.xml", m_AshitaCore->GetInstallPath());
+	//Get path to settings XML.
+    std::string Path = pSettings->GetCharacterSettingsPath(mState.CharacterName.c_str());
 
-	//Ensure directories exist, making them if not.
-	string makeDirectory(buffer);
-	size_t nextDirectory = makeDirectory.find("\\");
-	nextDirectory = makeDirectory.find("\\", nextDirectory + 1);
-	while (nextDirectory != string::npos)
-	{
-		string currentDirectory = makeDirectory.substr(0, nextDirectory + 1);
-		if ((!CreateDirectory(currentDirectory.c_str(), NULL)) && (ERROR_ALREADY_EXISTS != GetLastError()))
-		{
-			pOutput->error_f("Could not find or create folder. [$H%s$R]", currentDirectory.c_str());
-			return;
-		}
-		nextDirectory = makeDirectory.find("\\", nextDirectory + 1);
+	if ((Path == pSettings->GetLoadedXmlPath()) && (!forceReload)) return;
+
+	if (Path == "FILE_NOT_FOUND")
+    {
+        Path = pSettings->GetDefaultSettingsPath();
+        pSettings->CreateDirectories(Path.c_str());
+        CreateSettingsXml(true);
 	}
 
-	//If settings XML doesn't exist, write default settings to a blank file for next time.
-	if (INVALID_FILE_ATTRIBUTES == GetFileAttributes(buffer))
-	{
-		CreateSettingsXml(true);
-		return;
-	}
-
-	std::ifstream Reader(buffer, ios::in | ios::binary | ios::ate);
-	if (!Reader.is_open())
-	{
-		pOutput->error_f("Failed to read file.  [$H%s$R]", buffer);
-		return;
-	}
-
-	Reader.seekg(0, ios::end);
-	long Size = Reader.tellg();
-	char* File = new char[Size + 1];
-	Reader.seekg(0, ios::beg);
-	Reader.read(File, Size);
-	Reader.close();
-	File[Size] = '\0';
-
-	xml_document<>* XMLReader = new xml_document<>();
-	try
-	{
-		XMLReader->parse<0>(File);
-	}
-	catch (const rapidxml::parse_error& e)
-	{
-		int line = static_cast<long>(std::count(File, e.where<char>(), '\n') + 1);
-		stringstream error;
-		error << "Parse error[$H" << e.what() << "$R] at line $H" << line << "$R.";
-		pOutput->error(error.str().c_str());
-		delete XMLReader;
-		delete[] File;
-		return;
-	}
-	catch (...)
-	{
-		pOutput->error("Failed to parse configuration XML.");
-		delete XMLReader;
-		delete[] File;
-		return;
-	}
+	xml_document<>* XMLReader = pSettings->LoadSettingsXml(Path);
+    if (XMLReader == NULL)
+        return;
 
 	xml_node<>* Node = XMLReader->first_node("shorthand");
 	if (Node) Node = Node->first_node();
@@ -337,7 +281,4 @@ void Shorthand::LoadSettingsXml()
 
 		Node = Node->next_sibling();
 	}
-
-	delete[] File;
-	delete XMLReader;
 }

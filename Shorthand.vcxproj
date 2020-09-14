@@ -169,7 +169,8 @@ start "C:\Program Files\Git\git-bash.exe"</Command>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Output.h" />
+    <ClInclude Include="..\common\Output.h" />
+    <ClInclude Include="..\common\Settings.h" />
     <ClInclude Include="rapidxml.hpp" />
     <ClInclude Include="Shorthand.h" />
     <ClInclude Include="Structs.h" />

@@ -6,7 +6,8 @@
 #endif
 
 #include "C:\Program Files (x86)\Ashita 4\plugins\sdk\Ashita.h"
-#include "Output.h"
+#include "..\common\Output.h"
+#include "..\common\Settings.h"
 #include "Structs.h"
 using namespace std;
 
@@ -16,6 +17,7 @@ private:
     charstate_t         mState;
     settings_t          mSettings;
     OutputHelpers*      pOutput;
+    SettingsHelper* pSettings;
 
 public:
     const char* GetName(void) const override
@@ -36,7 +38,7 @@ public:
     }
     double GetVersion(void) const override
     {
-        return 1.00f;
+        return 1.01f;
     }
     int32_t GetPriority(void) const override
     {
@@ -57,7 +59,7 @@ public:
 private:
     //fileio.cpp
     void CreateSettingsXml(bool basic);
-    void LoadSettingsXml();
+    void LoadSettingsXml(bool forceReload);
 
     //processinput.cpp
     bool ProcessInput(const char* command);

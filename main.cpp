@@ -18,7 +18,18 @@ bool Shorthand::Initialize(IAshitaCore* core, ILogManager* logger, const uint32_
 	this->m_LogManager = logger;
 	this->m_PluginId   = id;
 	pOutput = new OutputHelpers(core, logger, this->GetName());
-	LoadSettingsXml();
+    pSettings          = new SettingsHelper(core, pOutput, this->GetName());
+
+    if (m_AshitaCore->GetMemoryManager()->GetParty()->GetMemberIsActive(0))
+    {
+        mState.CharacterName = m_AshitaCore->GetMemoryManager()->GetParty()->GetMemberName(0);
+    }
+    else
+    {
+        mState.CharacterName = "NO_NAME";
+    }
+
+	LoadSettingsXml(false);
 	InitializeSpells();
 
 	return true;
@@ -26,6 +37,7 @@ bool Shorthand::Initialize(IAshitaCore* core, ILogManager* logger, const uint32_
 
 void Shorthand::Release(void)
 {
+    delete pSettings;
 	delete pOutput;
 }
 
@@ -114,7 +126,7 @@ bool Shorthand::HandleCommand(int32_t mode, const char* command, bool injected)
 
 		else if (CheckArg(1, "reload"))
 		{
-			LoadSettingsXml();
+			LoadSettingsXml(true);
 		}
 
 		else if (CheckArg(1, "packetws"))
@@ -142,6 +154,17 @@ bool Shorthand::HandleIncomingPacket(uint16_t id, uint32_t size, const uint8_t* 
 	UNREFERENCED_PARAMETER(dataChunk);
 	UNREFERENCED_PARAMETER(injected);
 	UNREFERENCED_PARAMETER(blocked);
+
+    if (id == 0x00A)
+    {
+        string currentName((const char*)data + 0x84);
+
+        if (currentName != mState.CharacterName)
+        {
+            mState.CharacterName = currentName;
+            LoadSettingsXml(false);
+        }
+    }
 
 	//Use incoming spell packet to check if we have items.
 	if (id == 0xAA)
