@@ -7,6 +7,7 @@ using namespace rapidxml;
 void Shorthand::CreateSettingsXml(bool basic)
 {
     std::string Path = basic ? pSettings->GetDefaultSettingsPath() : pSettings->GetInputWritePath("empty.xml");
+    pSettings->CreateDirectories(Path.c_str());
 
 	ofstream outstream(Path.c_str());
 	if (!outstream.is_open())
@@ -98,7 +99,6 @@ void Shorthand::LoadSettingsXml(bool forceReload)
 	if (Path == "FILE_NOT_FOUND")
     {
         Path = pSettings->GetDefaultSettingsPath();
-        pSettings->CreateDirectories(Path.c_str());
         CreateSettingsXml(true);
 	}
 
