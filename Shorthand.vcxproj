@@ -127,6 +127,7 @@
     </Link>
     <PostBuildEvent>
       <Command>if not exist "build\plugins" mkdir "build\plugins"
+if exist "build\$(ProjectName).zip" del "build\$(ProjectName).zip"
 copy "Release\$(ProjectName).dll" "$(SolutionDir)build\plugins\$(ProjectName).dll"
 xcopy "$(SolutionDir)build\*" "C:\Ashita 4\" /i /e /Y
 cd build
