@@ -14,6 +14,9 @@ using namespace std;
 class Shorthand : IPlugin
 {
 private:
+    IAshitaCore* m_AshitaCore;
+    ILogManager* m_LogManager;
+    uint32_t m_PluginId;
     charstate_t         mState;
     settings_t          mSettings;
     OutputHelpers*      pOutput;
@@ -38,7 +41,7 @@ public:
     }
     double GetVersion(void) const override
     {
-        return 1.01f;
+        return 1.02f;
     }
     int32_t GetPriority(void) const override
     {
