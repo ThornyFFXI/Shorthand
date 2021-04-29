@@ -504,9 +504,13 @@ int32_t Shorthand::FindBestTarget(actioninfo_t* action)
 
 	if (IsPositiveInteger(action->Target.c_str()))
 	{
-		//If we have an integer, check index first.
+		//If we have an integer in range of valid entity indices, check index first.
 		int32_t target = atoi(action->Target.c_str());
-		if (IsValidTarget(validFlags, target)) return target;
+        if ((target > 0) && (target < 2304))
+        {
+            if (IsValidTarget(validFlags, target))
+                return target;
+        }
 
 		//If index doesn't work, check for ID.
 		for (int x = 0; x < 0x900; x++)

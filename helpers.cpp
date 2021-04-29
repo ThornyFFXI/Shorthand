@@ -140,7 +140,7 @@ bool Shorthand::CheckForUsableItem(uint16_t Id)
 			int container = Read8(&equipData->Index, 1);
 			if (index == 0) continue;
 			Ashita::FFXI::item_t* pItem = m_AshitaCore->GetMemoryManager()->GetInventory()->GetContainerItem(container, index);
-			if ((pItem->Id == Id) && (pItem->Count > 0) && (pItem->Extra[3] & 0x40)) return true;
+			if ((pItem != NULL) && (pItem->Id == Id) && (pItem->Count > 0) && (pItem->Extra[3] & 0x40)) return true;
 		}
 	}
 	else
@@ -150,7 +150,7 @@ bool Shorthand::CheckForUsableItem(uint16_t Id)
 			for (int x = 1; x < m_AshitaCore->GetMemoryManager()->GetInventory()->GetContainerCountMax(*iter); x++)
 			{
 				Ashita::FFXI::item_t* pItem = m_AshitaCore->GetMemoryManager()->GetInventory()->GetContainerItem(*iter, x);
-				if ((pItem->Id == Id) && (pItem->Count > 0)) return true;
+				if ((pItem != NULL) && (pItem->Id == Id) && (pItem->Count > 0)) return true;
 			}
 		}
 	}
