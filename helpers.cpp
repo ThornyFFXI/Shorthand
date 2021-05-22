@@ -162,13 +162,20 @@ bool Shorthand::IsValidTarget(uint16_t validFlags, int index)
 	if (m_AshitaCore->GetMemoryManager()->GetEntity()->GetRawEntity(index) == NULL) return false;
 	if ((m_AshitaCore->GetMemoryManager()->GetEntity()->GetRenderFlags0(index) & 0x200) == 0) return false;
 	if ((m_AshitaCore->GetMemoryManager()->GetEntity()->GetRenderFlags0(index) & 0x4000) != 0) return false;
+	unsigned int FullFlags = m_AshitaCore->GetMemoryManager()->GetEntity()->GetSpawnFlags(index);
+	unsigned char Flags = FullFlags & 0xFF;
 
-	if (validFlags == UINT16_MAX) return true; //Custom flags for target.
+	if (validFlags == UINT16_MAX) //Custom flags for /target
+    {
+		//Can't target dead mob.  Can you target a dead non-trust NPC..?  Can green HP npcs even die..?
+        if ((Flags == 0x10) && (m_AshitaCore->GetMemoryManager()->GetEntity()->GetHPPercent(index) == 0))
+            return false;
+
+        return true;
+    }
 
 	if ((m_AshitaCore->GetMemoryManager()->GetEntity()->GetHPPercent(index) == 0) != (validFlags == 157)) return false; //157 = raise/tractor rules
 	if (validFlags == 1) return (m_AshitaCore->GetMemoryManager()->GetParty()->GetMemberTargetIndex(0) == index); //1 = self
-	unsigned int FullFlags = m_AshitaCore->GetMemoryManager()->GetEntity()->GetSpawnFlags(index);
-	unsigned char Flags = FullFlags & 0xFF;
 	if (validFlags == 5) return ((Flags == 0x0D) || (FullFlags == 4366)); //5 = party
 	else if (validFlags == 29) return ((Flags == 0x01) || (Flags == 0x09) || (Flags == 0x0D) || (FullFlags == 4366)); //29 = player
 	else if (validFlags == 32) return (Flags == 0x10); //32 = enemy
