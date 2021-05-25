@@ -147,7 +147,7 @@ bool Shorthand::CheckForUsableItem(uint16_t Id)
 	{
 		for (std::list<int>::iterator iter = mSettings.UsableBags.begin(); iter != mSettings.UsableBags.end(); iter++)
 		{
-			for (int x = 1; x < m_AshitaCore->GetMemoryManager()->GetInventory()->GetContainerCountMax(*iter); x++)
+            for (int x = 1; x < min(81, m_AshitaCore->GetMemoryManager()->GetInventory()->GetContainerCountMax(*iter)); x++)
 			{
 				Ashita::FFXI::item_t* pItem = m_AshitaCore->GetMemoryManager()->GetInventory()->GetContainerItem(*iter, x);
 				if ((pItem != NULL) && (pItem->Id == Id) && (pItem->Count > 0)) return true;
