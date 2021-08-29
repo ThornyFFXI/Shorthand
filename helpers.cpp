@@ -21,9 +21,9 @@ void Shorthand::InitializeSpells()
 void Shorthand::SetSpellLearned(uint32_t id, bool learned)
 {	
 	const auto o = m_AshitaCore->GetOffsetManager();
-	const auto pointer = m_AshitaCore->GetPointerManager()->Get(u8"player.hasspell");
-	const auto offset1 = o->Get(u8"player.hasspell", u8"offset1");
-	const auto offset2 = o->Get(u8"player.hasspell", u8"offset2");
+	const auto pointer = m_AshitaCore->GetPointerManager()->Get("player.hasspell");
+	const auto offset1 = o->Get("player.hasspell", "offset1");
+	const auto offset2 = o->Get("player.hasspell", "offset2");
 
 	if (pointer == 0)
 		return;
