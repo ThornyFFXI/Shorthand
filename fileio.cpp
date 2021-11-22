@@ -88,13 +88,12 @@ void Shorthand::CreateSettingsXml(bool basic)
 
 void Shorthand::LoadSettingsXml(bool forceReload)
 {
-	//Reset settings.
-	mSettings = settings_t(m_AshitaCore);
-
 	//Get path to settings XML.
     std::string Path = pSettings->GetCharacterSettingsPath(mState.CharacterName.c_str());
-
 	if ((Path == pSettings->GetLoadedXmlPath()) && (!forceReload)) return;
+
+	//Reset settings.
+	mSettings = settings_t(m_AshitaCore);
 
 	if (Path == "FILE_NOT_FOUND")
     {
