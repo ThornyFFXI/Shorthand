@@ -1,4 +1,6 @@
 #include "Shorthand.h"
+#pragma comment(lib, "psapi.lib")
+#include <psapi.h>
 
 __declspec(dllexport) IPlugin* __stdcall expCreatePlugin(const char* args)
 {
@@ -31,6 +33,12 @@ bool Shorthand::Initialize(IAshitaCore* core, ILogManager* logger, const uint32_
 
 	LoadSettingsXml(false);
 	InitializeSpells();
+
+    MODULEINFO mod = {0};
+    ::GetModuleInformation(::GetCurrentProcess(), ::GetModuleHandle("FFXiMain.dll"), &mod, sizeof(MODULEINFO));
+    pWardrobe = Ashita::Memory::FindPattern((uintptr_t)mod.lpBaseOfDll, (uintptr_t)mod.SizeOfImage, "A1????????8B88B4000000C1E907F6C101E9", 1, 0);
+    if (!pWardrobe)
+        return false;
 
 	return true;
 }

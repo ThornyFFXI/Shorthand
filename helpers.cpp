@@ -116,15 +116,29 @@ bool Shorthand::HasBuff(int16_t id)
 	}
 	return false;
 }
+bool Shorthand::CheckBagEnabled(int index)
+{
+	if (index > 10)
+    {
+        DWORD Memloc = Read32(pWardrobe, 0);
+        Memloc       = Read32(Memloc, 0);
+        return (Ashita::BinaryData::UnpackBitsBE((uint8_t*)Memloc, 0xB4, 0, 1) == 1);
+	}
+    return true;
+}
 bool Shorthand::CheckForEquippableItem(uint16_t Id)
 {
 	for (std::list<int>::iterator iter = mSettings.EquipBags.begin(); iter != mSettings.EquipBags.end(); iter++)
 	{
-		for (int x = 1; x < m_AshitaCore->GetMemoryManager()->GetInventory()->GetContainerCountMax(*iter); x++)
-		{
-			Ashita::FFXI::item_t* pItem = m_AshitaCore->GetMemoryManager()->GetInventory()->GetContainerItem(*iter, x);
-			if ((pItem->Id == Id) && (pItem->Count > 0)) return true;
-		}
+        if (CheckBagEnabled(*iter))
+        {
+            for (int x = 1; x < m_AshitaCore->GetMemoryManager()->GetInventory()->GetContainerCountMax(*iter); x++)
+            {
+                Ashita::FFXI::item_t* pItem = m_AshitaCore->GetMemoryManager()->GetInventory()->GetContainerItem(*iter, x);
+                if ((pItem->Id == Id) && (pItem->Count > 0))
+                    return true;
+            }
+        }
 	}
 	return false;
 }

@@ -67,7 +67,7 @@ struct settings_t
 
     settings_t() {}
     settings_t(IAshitaCore* m_AshitaCore) :
-        EquipBags(std::list<int>{0, 8, 10, 11, 12}),
+        EquipBags(std::list<int>{0, 8, 10, 11, 12, 13, 14, 15, 16}),
         UsableBags(std::list<int> {0, 3}),
         PacketWs(false),
         CheckInventoryForGear(true),

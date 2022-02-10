@@ -21,6 +21,7 @@ private:
     settings_t          mSettings;
     OutputHelpers*      pOutput;
     SettingsHelper* pSettings;
+    DWORD pWardrobe;
 
 public:
     const char* GetName(void) const override
@@ -41,7 +42,7 @@ public:
     }
     double GetVersion(void) const override
     {
-        return 1.07f;
+        return 1.08f;
     }
     int32_t GetPriority(void) const override
     {
@@ -79,6 +80,7 @@ private:
     const char* strcasestr(const char* _Str, const char* _SubStr);
     uint16_t GetValidFlags(actioninfo_t* action);
     bool HasBuff(int16_t id);
+    bool CheckBagEnabled(int index);
     bool CheckForUsableItem(uint16_t Id);
     bool CheckForEquippableItem(uint16_t Id);
     bool IsValidTarget(uint16_t validFlags, int index);
