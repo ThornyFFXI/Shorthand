@@ -42,11 +42,11 @@ public:
     }
     double GetVersion(void) const override
     {
-        return 1.09f;
+        return 1.10f;
     }
     int32_t GetPriority(void) const override
     {
-        return 0;
+        return -5;
     }
     uint32_t GetFlags(void) const override
     {
