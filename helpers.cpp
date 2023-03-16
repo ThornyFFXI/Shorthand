@@ -177,6 +177,7 @@ bool Shorthand::IsValidTarget(uint16_t validFlags, int index)
 	if ((m_AshitaCore->GetMemoryManager()->GetEntity()->GetRenderFlags0(index) & 0x200) == 0) return false;
 	if ((m_AshitaCore->GetMemoryManager()->GetEntity()->GetRenderFlags0(index) & 0x4000) != 0) return false;
 	unsigned int FullFlags = m_AshitaCore->GetMemoryManager()->GetEntity()->GetSpawnFlags(index);
+	if (FullFlags & 0x10) return false;
 	unsigned char Flags = FullFlags & 0xFF;
 
 	if (validFlags == UINT16_MAX) //Custom flags for /target
