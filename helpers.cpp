@@ -122,7 +122,8 @@ bool Shorthand::CheckBagEnabled(int index)
     {
         DWORD Memloc = Read32(pWardrobe, 0);
         Memloc       = Read32(Memloc, 0);
-        return (Ashita::BinaryData::UnpackBitsBE((uint8_t*)Memloc, 0xB4, 0, 1) == 1);
+        auto flag    = Read8(Memloc, 0xB4);
+        return ((flag & (2 ^ (index - 9))) != 0);
 	}
     return true;
 }
