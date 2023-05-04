@@ -448,37 +448,6 @@ int32_t Shorthand::GetActionTarget(actioninfo_t* action)
 	}
 
 	//Resolve custom macros
-	if (_stricmp(target, "<at>") == 0)
-	{
-		float bestDistance = FLT_MAX;
-		int32_t bestMatch = 0;
-		for (int x = 0; x < 0x500; x++)
-		{
-			if ((m_AshitaCore->GetMemoryManager()->GetEntity()->GetRawEntity(x) != 0)
-				&& ((m_AshitaCore->GetMemoryManager()->GetEntity()->GetRenderFlags0(x) & 0x200) != 0)
-				&& ((m_AshitaCore->GetMemoryManager()->GetEntity()->GetRenderFlags0(x) & 0x4000) == 0))
-			{
-				uint32_t claimId = m_AshitaCore->GetMemoryManager()->GetEntity()->GetClaimStatus(x);
-				if (claimId != 0)
-				{
-					for (int y = 0; y < 18; y++)
-					{
-						if (m_AshitaCore->GetMemoryManager()->GetParty()->GetMemberServerId(y) == claimId)
-						{
-							float distance = m_AshitaCore->GetMemoryManager()->GetEntity()->GetDistance(x);
-							if ((bestMatch == 0) || (distance < bestDistance))
-							{
-								bestMatch = x;
-								bestDistance = distance;
-							}
-							break;
-						}
-					}
-				}
-			}
-		}
-		return bestMatch;
-	}
 	if (_stricmp(target, "me") == 0) return m_AshitaCore->GetMemoryManager()->GetParty()->GetMemberTargetIndex(0);
 
 	//Command is not using a valid macro, so parse entities to find a matching target.
