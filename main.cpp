@@ -213,9 +213,9 @@ bool Shorthand::HandleOutgoingPacket(uint16_t id, uint32_t size, const uint8_t* 
 		{
 			if ((Read16(data, 12) == 503) && (!mState.KnowsImpact))
 			{
-				if (!CheckForEquippableItem(11363))
+				if ((!CheckForEquippableItem(11363)) || (!CheckForEquippableItem(23799)))
 				{
-					pOutput->error("No twilight cloak in equippable bags.  Impact packet blocked.");
+					pOutput->error("No twilight or crepuscular cloak in equippable bags.  Impact packet blocked.");
 					return true;
 				}
 			}
