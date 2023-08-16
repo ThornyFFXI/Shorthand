@@ -41,7 +41,7 @@ void Shorthand::CreateSettingsXml(bool basic)
 	outstream << "\t\t<debug>";
 	if (mSettings.Debug) outstream << "true";
 	else outstream << "false";
-	outstream << "</dispelga>\n";
+	outstream << "</debug>\n";
 	outstream << "\t</settings>\n\n";
 
 	if (!basic)
