@@ -489,16 +489,20 @@ int32_t Shorthand::FindBestTarget(actioninfo_t* action)
 	//Figure out what our action is capable of targeting.
 	uint16_t validFlags = GetValidFlags(action);
 
-	//If we don't have any text in the target field, see if it's a self-only spell or our current target will work.
+	//If we don't have any text in the target field, see if current target or self will work.
 	if (action->Target.length() < 1)
 	{
-		if (validFlags == 1) return m_AshitaCore->GetMemoryManager()->GetParty()->GetMemberTargetIndex(0);
-
+		// Check target..
 		int targetStatus = m_AshitaCore->GetMemoryManager()->GetTarget()->GetIsSubTargetActive();
 		int targetIndex = m_AshitaCore->GetMemoryManager()->GetTarget()->GetTargetIndex(targetStatus);
-		if (IsValidTarget(validFlags, targetIndex)) return targetIndex;
+		if (IsValidTarget(validFlags, targetIndex))
+			return targetIndex;
 
-		//Not self-only, and our current target isn't valid.  We have no text to work with, so we can't resolve a target accurately.
+		// Check self..
+		if (validFlags & 1)
+			return m_AshitaCore->GetMemoryManager()->GetParty()->GetMemberTargetIndex(0);
+
+		//Neither the player nor their current target isn't valid.  We have no text to work with, so we can't resolve a target accurately.
 		return 0;
 	}
 
