@@ -24,6 +24,13 @@ void Shorthand::InitializeSpells()
 }
 void Shorthand::SetSpellLearned(uint32_t id, bool learned)
 {
+    //If we're not ingame yet, we don't want to edit the spell memory.
+    uint16_t myIndex = m_AshitaCore->GetMemoryManager()->GetParty()->GetMemberTargetIndex(0);
+    if (myIndex == 0)
+        return;
+    if (((m_AshitaCore->GetMemoryManager()->GetEntity()->GetRenderFlags0(myIndex) & 0x200) == 0) || ((m_AshitaCore->GetMemoryManager()->GetEntity()->GetRenderFlags0(myIndex) & 0x4000)))
+        return;
+
     const auto o       = m_AshitaCore->GetOffsetManager();
     const auto pointer = m_AshitaCore->GetPointerManager()->Get("player.hasspell");
     const auto offset1 = o->Get("player.hasspell", "offset1");
