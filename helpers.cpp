@@ -226,37 +226,50 @@ bool Shorthand::IsValidTarget(uint16_t validFlags, int index)
 
     // Pet target..
     if ((validFlags & 0x02) && (flags & 0x0100))
-        return true;
+    {
+        // This only applies to your own pets.
+        if (index == entity->GetPetTargetIndex(myIndex))
+            return true;
+    }
 
     // Party target..
     if ((validFlags & 0x04) && (flags & 0x04))
-        return true;
-
-    // Alliance target..
-    if ((validFlags & 0x08) && (flags & 0x08))
-        return true;
-
-    // Friendly player target..
-    if ((validFlags & 0x10) && (flags & 0x01))
     {
+        // Can't do this if person is charmed..
         if (allegiance == myAllegiance)
             return true;
     }
 
-    // Enemy target..
-    if (validFlags & 0x20)
+    // Alliance target..
+    if ((validFlags & 0x08) && (flags & 0x08))
     {
-        // Monster..
-        if (flags & 0x10)
+        // Can't do this if person is charmed..
+        if (allegiance == myAllegiance)
+            return true;
+    }
+
+    // Friendly target..
+    if ((validFlags & 0x10) && (allegiance == myAllegiance))
+    {
+        // Can cast on players that aren't charmed..
+        if (flags & 0x01)
             return true;
 
-        // Player..
-        else if (flags & 0x01)
-        {
-            // Opposing ballista team *or* charmed
-            if (allegiance != myAllegiance)
-                return true;
-        }
+        // Can cast on allied battle entities that aren't pets.. (helper npcs)
+        if ((flags & 0x10) && ((flags & 0x100) == 0))
+            return true;
+    }
+
+    // Enemy target..
+    if ((validFlags & 0x20) && (allegiance != myAllegiance))
+    {
+        // Can cast on players that are charmed or on a different ballista team..
+        if (flags & 0x01)
+            return true;
+
+        // Can cast on monsters that aren't currently pets..
+        if ((flags & 0x10) && ((flags & 0x100) == 0))
+            return true;
     }
 
     // NPC.. (unused?)
