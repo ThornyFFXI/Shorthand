@@ -190,38 +190,79 @@ bool Shorthand::CheckForUsableItem(uint16_t Id)
 
 bool Shorthand::IsValidTarget(uint16_t validFlags, int index)
 {
-    if (m_AshitaCore->GetMemoryManager()->GetEntity()->GetRawEntity(index) == NULL)
-        return false;
-    if ((m_AshitaCore->GetMemoryManager()->GetEntity()->GetRenderFlags0(index) & 0x200) == 0)
-        return false;
-    if ((m_AshitaCore->GetMemoryManager()->GetEntity()->GetRenderFlags0(index) & 0x4000) != 0)
-        return false;
-    unsigned int FullFlags = m_AshitaCore->GetMemoryManager()->GetEntity()->GetSpawnFlags(index);
-    unsigned char Flags    = FullFlags & 0xFF;
+    auto entity = m_AshitaCore->GetMemoryManager()->GetEntity();
 
-    if (validFlags == UINT16_MAX) //Custom flags for /target
+    // Disregard anything that's not rendered and targetable.
+    if (entity->GetRawEntity(index) == NULL)
+        return false;
+    if ((entity->GetRenderFlags0(index) & 0x200) == 0)
+        return false;
+    if ((entity->GetRenderFlags0(index) & 0x4000) != 0)
+        return false;
+
+    auto myIndex      = m_AshitaCore->GetMemoryManager()->GetParty()->GetMemberTargetIndex(0);
+    auto myAllegiance = entity->GetBallistaFlags(myIndex);
+    auto flags        = entity->GetSpawnFlags(index);
+    auto allegiance   = entity->GetBallistaFlags(index);
+    auto health       = entity->GetHPPercent(index);
+
+    // Custom validFlags for /target
+    if (validFlags == UINT16_MAX)
     {
-        //Can't target dead mob.  Can you target a dead non-trust NPC..?  Can green HP npcs even die..?
-        if ((Flags == 0x10) && (m_AshitaCore->GetMemoryManager()->GetEntity()->GetHPPercent(index) == 0))
+        // Can't target anything that's dead and on team monster.
+        if ((health == 0) && (allegiance == 0))
             return false;
 
         return true;
     }
 
-    if ((m_AshitaCore->GetMemoryManager()->GetEntity()->GetHPPercent(index) == 0) != (validFlags == 157))
-        return false; //157 = raise/tractor rules
-    if (validFlags == 1)
-        return (m_AshitaCore->GetMemoryManager()->GetParty()->GetMemberTargetIndex(0) == index); //1 = self
-    if (validFlags == 5)
-        return ((Flags == 0x0D) || (FullFlags == 4366)); //5 = party
-    else if (validFlags == 29)
-        return ((Flags == 0x01) || (Flags == 0x09) || (Flags == 0x0D) || (FullFlags == 4366)); //29 = player
-    else if (validFlags == 32)
-        return (Flags == 0x10); //32 = enemy
-    else if (validFlags == 63)
-        return ((Flags == 0x01) || (Flags == 0x09) || (Flags == 0x10) || (Flags == 0x0D) || (FullFlags == 4366)); //63 = player or mob
-    else if (validFlags == 157)
-        return ((Flags == 0x01) || (Flags == 0x09) || (Flags == 0x0D)); //157 = dead player
+    // Don't target living entities for raise/tractor..
+    if ((validFlags & 0x80) && (health != 0))
+        return false;
+
+    // Self target..
+    if ((validFlags & 0x01) && (flags & 0x200))
+        return true;
+
+    // Pet target..
+    if ((validFlags & 0x02) && (flags & 0x0100))
+        return true;
+
+    // Party target..
+    if ((validFlags & 0x04) && (flags & 0x04))
+        return true;
+
+    // Alliance target..
+    if ((validFlags & 0x08) && (flags & 0x08))
+        return true;
+
+    // Friendly player target..
+    if ((validFlags & 0x10) && (flags & 0x01))
+    {
+        if (allegiance == myAllegiance)
+            return true;
+    }
+
+    // Enemy target..
+    if (validFlags & 0x20)
+    {
+        // Monster..
+        if (flags & 0x10)
+            return true;
+
+        // Player..
+        else if (flags & 0x01)
+        {
+            // Opposing ballista team *or* charmed
+            if (allegiance != myAllegiance)
+                return true;
+        }
+    }
+
+    // NPC.. (unused?)
+    if ((validFlags & 0x40) && (flags & 0x02))
+        return true;
+
     return false;
 }
 bool Shorthand::RelaxedMatch(std::string input, std::string compare)
@@ -257,93 +298,41 @@ bool Shorthand::RelaxedMatch(std::string input, std::string compare)
         if (!CheckRoman(&lhs, &rhs))
             return false;
     }
+
+    //Advance right hand side as long as it's not something that needs to be matched
     while ((!isalnum(rhs[0])) && (rhs[0] != 0x00))
         rhs++;
-    if ((rhs[0] == 0x00) && (lhs[0] == '1'))
-        lhs++;
+
+    // Special case for trailing 1 on input  [cure1 for "Cure", thunder1 for "Thunder", etc..]
+    if ((rhs[0] == 0x00) && (lhs[0] == '1') && (lhs[1] == 0x00))
+        return true;
+
     return ((lhs[0] == 0x00) && (rhs[0] == 0x00));
 }
+
+std::map<char, const char*> romanNumerals = {
+    {'2', "II"},
+    {'3', "III"},
+    {'4', "IV"},
+    {'5', "V"},
+    {'6', "VI"},
+    {'7', "VII"},
+    {'8', "VIII"},
+    {'9', "IX"}};
 bool Shorthand::CheckRoman(const char** lhs, const char** rhs)
 {
-    if ((*lhs)[0] == '2')
+    for (auto iter = romanNumerals.begin(); iter != romanNumerals.end(); iter++)
     {
-        if (strncmp(*rhs, "II", 2) == 0)
+        if ((*lhs)[0] == iter->first)
         {
-            (*lhs)++;
-            (*rhs) += 2;
-            return true;
+            auto len = strlen(iter->second);
+            if (strncmp(*rhs, iter->second, len) == 0)
+            {
+                (*lhs)++;
+                (*rhs) += len;
+                return true;
+            }
         }
     }
-
-    else if ((*lhs)[0] == '3')
-    {
-        if (strncmp(*rhs, "III", 3) == 0)
-        {
-            (*lhs)++;
-            (*rhs) += 3;
-            return true;
-        }
-    }
-
-    else if ((*lhs)[0] == '4')
-    {
-        if (strncmp(*rhs, "IV", 2) == 0)
-        {
-            (*lhs)++;
-            (*rhs) += 2;
-            return true;
-        }
-    }
-
-    else if ((*lhs)[0] == '5')
-    {
-        if ((*rhs)[0] == 'V')
-        {
-            (*lhs)++;
-            (*rhs)++;
-            return true;
-        }
-    }
-
-    else if ((*lhs)[0] == '6')
-    {
-        if (strncmp(*rhs, "VI", 2) == 0)
-        {
-            (*lhs)++;
-            (*rhs) += 2;
-            return true;
-        }
-    }
-
-    else if ((*lhs)[0] == '7')
-    {
-        if (strncmp(*rhs, "VII", 3) == 0)
-        {
-            (*lhs)++;
-            (*rhs) += 3;
-            return true;
-        }
-    }
-
-    else if ((*lhs)[0] == '8')
-    {
-        if (strncmp(*rhs, "VIII", 4) == 0)
-        {
-            (*lhs)++;
-            (*rhs) += 4;
-            return true;
-        }
-    }
-
-    else if ((*lhs)[0] == '9')
-    {
-        if (strncmp(*rhs, "IX", 2) == 0)
-        {
-            (*lhs)++;
-            (*rhs) += 2;
-            return true;
-        }
-    }
-
     return false;
 }
