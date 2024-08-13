@@ -220,8 +220,8 @@ bool Shorthand::IsValidTarget(uint16_t validFlags, int index)
         return true;
     }
 
-    // Don't target living entities for raise/tractor..
-    if ((validFlags & 0x80) && (health != 0))
+    // Don't target living entities for raise/tractor or dead entities for anything else..
+    if (((validFlags & 0x80) != 0) != (health == 0))
         return false;
 
     // Self target..
@@ -255,8 +255,8 @@ bool Shorthand::IsValidTarget(uint16_t validFlags, int index)
     // Friendly target..
     if ((validFlags & 0x10) && (allegiance == myAllegiance))
     {
-        // Can cast on players that aren't charmed..
-        if (flags & 0x01)
+        // Can cast on players and NPCs that are allied with self..
+        if (flags & 0x03)
             return true;
 
         // Can cast on allied battle entities that aren't pets.. (helper npcs)
@@ -276,7 +276,7 @@ bool Shorthand::IsValidTarget(uint16_t validFlags, int index)
             return true;
     }
 
-    // NPC.. (unused?)
+    // NPC tradable..
     if ((validFlags & 0x40) && (flags & 0x02))
         return true;
 
