@@ -1,3 +1,5 @@
+# Shorthand is only designed for english language users, as the mechanisms it uses to adjust syntax are exclusive to the english language.  It should not be used on the Japanese client, as there are known issues with the text encoding that can cause unintended behavior.
+
 # Shorthand
 Shorthand is a plugin that allows you to be less strict when typing actions directly.  To be specific, it provides the following error correction:
 * You may omit any symbols or spaces when typing JA, WS, spell, or item names[this only applies to using /item to use items directly, not trades or other plugins].
