@@ -5,9 +5,9 @@
 #pragma once
 #endif
 
-#include "C:\Ashita 4\plugins\sdk\Ashita.h"
-#include "..\common\Output.h"
-#include "..\common\Settings.h"
+#include "Ashita.h"
+#include "common\Output.h"
+#include "common\Settings.h"
 #include "Structs.h"
 using namespace std;
 
@@ -42,7 +42,7 @@ public:
     }
     double GetVersion(void) const override
     {
-        return 1.21f;
+        return 1.22f;
     }
     int32_t GetPriority(void) const override
     {

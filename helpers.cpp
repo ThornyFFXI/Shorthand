@@ -34,7 +34,7 @@ void Shorthand::SetSpellLearned(uint32_t id, bool learned)
     const auto o       = m_AshitaCore->GetOffsetManager();
     const auto pointer = m_AshitaCore->GetPointerManager()->Get("player.hasspell");
     const auto offset1 = o->Get("player.hasspell", "offset1");
-    const auto offset2 = o->Get("player.hasspell", "offset2");
+    const auto offset2 = o->Get("player.hasspell", "offset3");
 
     if (pointer == 0)
         return;

@@ -60,3 +60,6 @@ When enabled, all typed commands will be printed to Ashita’s debug log.  You m
 
 * /raw [required: command]<br>
 This sends a command through to the game client without allowing shorthand to evaluate it.  The first 5 characters (/raw and the trailing space) are trimmed, everything else is left untouched.
+
+## Build Note
+You should set the environmental variable ASHITA4_INSTALL_DIRECTORY to your base ashita directory so that the SDK reference and post-build copy to plugin directory work correctly.
