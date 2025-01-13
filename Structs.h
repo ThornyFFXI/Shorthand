@@ -10,7 +10,7 @@
 #include <map>
 #include <stdint.h>
 #include <string>
-#include "..\common\Utilities.h"
+#include "common\Utilities.h"
 
 enum class ActionFlags : uint32_t
 {
