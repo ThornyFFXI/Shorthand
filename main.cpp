@@ -256,7 +256,7 @@ bool Shorthand::HandleOutgoingPacket(uint16_t id, uint32_t size, const uint8_t* 
 			if ((Read16(data, 12) == 418) && (!mState.KnowsAriaOfPassion))
 			{
 				uint16_t zoneId = m_AshitaCore->GetMemoryManager()->GetParty()->GetMemberZone(0);
-				if (!(CheckForEquippableItem(22305) && (zoneId == 275 || zoneId == 133 || zoneId == 189) && !CheckForEquippableItem(22306) && !CheckForEquippableItem(22307)))
+				if (!(CheckForEquippableItem(22305) && (zoneId == 275 || zoneId == 133 || zoneId == 189)) || CheckForEquippableItem(22306) || CheckForEquippableItem(22307))
 				{
 					pOutput->error("No Loughnashade in equippable bags.  Aria of Passion packet blocked.");
 					return true;
