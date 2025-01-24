@@ -127,6 +127,19 @@ bool Shorthand::HandleCommand(int32_t mode, const char* command, bool injected)
 			if (!mState.KnowsHonorMarch) SetSpellLearned(417, mSettings.UnlockHonorMarch);
 		}
 
+		else if (CheckArg(1, "aria"))
+		{
+			if (CheckArg(2, "on"))
+				mSettings.UnlockAriaOfPassion = true;
+			else if (CheckArg(2, "off"))
+				mSettings.UnlockAriaOfPassion = false;
+			else
+				mSettings.UnlockAriaOfPassion = !mSettings.UnlockAriaOfPassion;
+
+			pOutput->message_f("Aria of Passion override $H%s$R.", mSettings.UnlockAriaOfPassion ? "enabled" : "disabled");
+			if (!mState.KnowsAriaOfPassion) SetSpellLearned(418, mSettings.UnlockAriaOfPassion);
+		}
+
 		else if (CheckArg(1, "export"))
 		{
 			CreateSettingsXml(false);
@@ -178,6 +191,7 @@ bool Shorthand::HandleIncomingPacket(uint16_t id, uint32_t size, const uint8_t* 
 	if (id == 0xAA)
 	{
 		//Set these.  If the game says we know it, we don't need to later check if we have the gear.
+		mState.KnowsAriaOfPassion = (Read8(data, 0x038) & 0x04);
 		mState.KnowsHonorMarch = (Read8(data, 0x38) & 0x02);
 		mState.KnowsDispelga = (Read8(data, 0x31) & 0x01);
 		mState.KnowsImpact = (Read8(data, 0x42) & 0x80);
@@ -186,6 +200,7 @@ bool Shorthand::HandleIncomingPacket(uint16_t id, uint32_t size, const uint8_t* 
 		if (mSettings.UnlockImpact) Write8(modified, 0x42) |= 0x80;
 		if (mSettings.UnlockDispelga) Write8(modified, 0x31) |= 0x01;
 		if (mSettings.UnlockHonorMarch) Write8(modified, 0x38) |= 0x02;
+		if (mSettings.UnlockAriaOfPassion) Write8(modified, 0x38) |= 0x04;
 	}
 
 	return false;
@@ -234,6 +249,16 @@ bool Shorthand::HandleOutgoingPacket(uint16_t id, uint32_t size, const uint8_t* 
 				if (!CheckForEquippableItem(21398))
 				{
 					pOutput->error("No marsyas in equippable bags.  Honor March packet blocked.");
+					return true;
+				}
+			}
+
+			if ((Read16(data, 12) == 418) && (!mState.KnowsAriaOfPassion))
+			{
+				uint16_t zoneId = m_AshitaCore->GetMemoryManager()->GetParty()->GetMemberZone(0);
+				if (!(CheckForEquippableItem(22305) && (zoneId == 275 || zoneId == 133 || zoneId == 189)) || CheckForEquippableItem(22306) || CheckForEquippableItem(22307))
+				{
+					pOutput->error("No Loughnashade in equippable bags.  Aria of Passion packet blocked.");
 					return true;
 				}
 			}

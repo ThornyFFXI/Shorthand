@@ -10,15 +10,18 @@ void Shorthand::InitializeSpells()
         return;
 
     //We know we're ingame, so we can fill in what we know.
-    mState.KnowsDispelga   = m_AshitaCore->GetMemoryManager()->GetPlayer()->HasSpell(360);
-    mState.KnowsHonorMarch = m_AshitaCore->GetMemoryManager()->GetPlayer()->HasSpell(417);
-    mState.KnowsImpact     = m_AshitaCore->GetMemoryManager()->GetPlayer()->HasSpell(503);
+    mState.KnowsDispelga      = m_AshitaCore->GetMemoryManager()->GetPlayer()->HasSpell(360);
+    mState.KnowsHonorMarch    = m_AshitaCore->GetMemoryManager()->GetPlayer()->HasSpell(417);
+    mState.KnowsImpact        = m_AshitaCore->GetMemoryManager()->GetPlayer()->HasSpell(503);
+    mState.KnowsAriaOfPassion = m_AshitaCore->GetMemoryManager()->GetPlayer()->HasSpell(418);
 
     //Once we fill in what we know, we can apply our overrides if applicable.
     if ((!mState.KnowsDispelga) && (mSettings.UnlockDispelga))
         SetSpellLearned(360, true);
     if ((!mState.KnowsHonorMarch) && (mSettings.UnlockHonorMarch))
         SetSpellLearned(417, true);
+    if ((!mState.KnowsAriaOfPassion) && (mSettings.UnlockAriaOfPassion))
+        SetSpellLearned(418, true);
     if ((!mState.KnowsImpact) && (mSettings.UnlockImpact))
         SetSpellLearned(503, true);
 }
