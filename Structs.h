@@ -40,12 +40,14 @@ struct charstate_t
     bool                KnowsDispelga;
     bool                KnowsImpact;
     bool                KnowsHonorMarch;
+    bool                KnowsAriaOfPassion;
     charstate_t() :
         OverrideEntrust(std::chrono::steady_clock::now() - std::chrono::seconds(1)),
         OverridePianissimo(std::chrono::steady_clock::now() - std::chrono::seconds(1)),
         KnowsDispelga(false),
         KnowsImpact(false),
         KnowsHonorMarch(false),
+        KnowsAriaOfPassion(false),
     CharacterName(std::string("NO_NAME")) {}
 };
 struct settings_t
@@ -63,6 +65,7 @@ struct settings_t
     bool				UnlockDispelga;
     bool				UnlockImpact;
     bool				UnlockHonorMarch;
+    bool                UnlockAriaOfPassion;
     bool                Debug;
 
     settings_t() {}
@@ -74,6 +77,7 @@ struct settings_t
         UnlockDispelga(false),
         UnlockImpact(false),
         UnlockHonorMarch(false),
+        UnlockAriaOfPassion(false),
         Debug(false) {
             AbilityMap = std::map<std::string, uint16_t>();
             for (uint16_t x = 512; x < 1512; x++)

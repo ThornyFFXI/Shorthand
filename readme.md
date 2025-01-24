@@ -51,6 +51,10 @@ Note that the server still requires Twilight Cloak equipped for cast to begin an
 When enabled, this modifies the game client to believe you currently know Honor March.  This allows you to cast through menu, or by typing the command, without Marsyas on.<br>
 Note that the server still requires Marsyas equipped for cast to begin and complete, so you must equip it in the macro prior to the cast line or have Ashitacast configured to equip it in precast and midcast.
 
+* /shh aria [optional: on/off]<br>
+When enabled, this modifies the game client to believe you currently know Aria of Passion.  This allows you to cast through menu, or by typing the command, without Loughnashade on.<br>
+Note that the server still requires Loughnashade to be equipped for cast to begin and complete, so you must equip it in the macro prior to the cast line or have Ashitacast configured to equip it in precast and midcast.
+
 * /shh dispelga [optional: on/off]<br>
 When enabled, this modifies the game client to believe you currently know Dispelga.  This allows you to cast through menu, or by typing the command, without Daybreak on.<br>
 Note that the server still requires Daybreak equipped for cast to begin and complete, so you must equip it in the macro prior to the cast line or have Ashitacast configured to equip it in precast and midcast.

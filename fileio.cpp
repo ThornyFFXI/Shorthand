@@ -34,6 +34,10 @@ void Shorthand::CreateSettingsXml(bool basic)
 	if (mSettings.UnlockHonorMarch) outstream << "true";
 	else outstream << "false";
 	outstream << "</honor>\n";
+	outstream << "\t\t<aria>";
+	if (mSettings.UnlockAriaOfPassion) outstream << "true";
+	else outstream << "false";
+	outstream << "</aria>\n";
 	outstream << "\t\t<dispelga>";
 	if (mSettings.UnlockDispelga) outstream << "true";
 	else outstream << "false";
@@ -133,6 +137,10 @@ void Shorthand::LoadSettingsXml(bool forceReload)
 				if (_stricmp(SubNode->name(), "honor") == 0)
 				{
 					if (_stricmp(SubNode->value(), "true") == 0) mSettings.UnlockHonorMarch = true;
+				}
+				if (_stricmp(SubNode->name(), "aria") == 0)
+				{
+					if (_stricmp(SubNode->value(), "true") == 0) mSettings.UnlockAriaOfPassion = true;
 				}
 				if (_stricmp(SubNode->name(), "debug") == 0)
 				{
