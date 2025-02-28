@@ -9,6 +9,13 @@ Shorthand is a plugin that allows you to be less strict when typing actions dire
 * You may prefix any spell, JA, WS, or item with // instead of /ma, /ja, /ws, or /item.  Note that if this is ambiguous, such as in the case of Fire IV(spell) and Fire IV(blood pact), you may not always get the desired result.  Shorthand will prefer Spell > Ability > Weaponskill > Item, and prefer actions you know over actions you don’t, to make the best attempt at selecting the correct action.  If that is not sufficient, you should not use // and instead use a more specific command to ensure the correct action is selected.
 * You may also add additional spell/ability/item/ws names and aliases through the config file located at Ashita/config/shorthand/settings.xml : see ‘Ashita/docs/shorthand/XML Layout.htm’.  This config file will be automatically generated on first load if it does not exist.
 
+# Installation
+Do not download the entire repository as a zip unless you plan to compile the plugin yourself. That will not provide the files you need.<br>
+
+1. Download the plugin release zip that matches your ashita installation's interface version from the releases area on the right side.
+2. Extract the entire zip to your ashita folder(the folder containing ashita.dll and ashita-cli.exe). Everything will fall into place.
+3. Load with '/load shorthand' or add the same line to your startup script. Shorthand is a plugin not an addon, so do not use '/addon load'.
+
 ## Parsing
 Shorthand will evaluate any commands beginning with any of these prefixes followed by a space.  (Example: '/item warpring' is valid, but '/itemwarpring' is not.)
 * /ra
