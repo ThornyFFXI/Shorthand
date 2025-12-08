@@ -1,4 +1,5 @@
 LIBRARY "Shorthand"
 EXPORTS
 	expCreatePlugin
+	expDestroyPlugin
 	expGetInterfaceVersion

@@ -332,8 +332,8 @@ actioninfo_t Shorthand::GetActionId(uint32_t flags, std::vector<string> args, in
 					}
 					else
 					{
-						if (spellInfo->LevelRequired[(int)pow(mainJob, 2)] < mainJobLevel) hasLevel = true;
-						if (spellInfo->LevelRequired[(int)pow(subJob, 2)] < subJobLevel) hasLevel = true;
+						if (spellInfo->LevelRequired[mainJob] <= mainJobLevel) hasLevel = true;
+						if (spellInfo->LevelRequired[subJob] <= subJobLevel) hasLevel = true;
 					}
 					if (hasLevel)
 					{
