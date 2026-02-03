@@ -191,7 +191,7 @@ bool Shorthand::CheckForUsableItem(uint16_t Id)
     return false;
 }
 
-bool Shorthand::IsValidTarget(uint16_t validFlags, int index)
+bool Shorthand::IsValidTarget(uint16_t validFlags, int index, bool overrideHorizonCheck)
 {
     auto entity = m_AshitaCore->GetMemoryManager()->GetEntity();
 
@@ -210,7 +210,7 @@ bool Shorthand::IsValidTarget(uint16_t validFlags, int index)
     auto health       = entity->GetHPPercent(index);
     
     // For Horizon version, don't target anything that may be an enemy.
-    if (allegiance != myAllegiance)
+    if ((!overrideHorizonCheck) && (allegiance != myAllegiance))
         return false;
 
     // Custom validFlags for /target

@@ -42,7 +42,7 @@ public:
     }
     double GetVersion(void) const override
     {
-        return 1.24f;
+        return 1.25f;
     }
     int32_t GetPriority(void) const override
     {
@@ -83,7 +83,7 @@ private:
     bool CheckBagEnabled(int index);
     bool CheckForUsableItem(uint16_t Id);
     bool CheckForEquippableItem(uint16_t Id);
-    bool IsValidTarget(uint16_t validFlags, int index);
+    bool IsValidTarget(uint16_t validFlags, int index, bool overrideHorizonCheck);
     bool RelaxedMatch(std::string input, std::string compare);
     bool CheckRoman(const char** lhs, const char** rhs);
 };

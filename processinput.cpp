@@ -464,7 +464,7 @@ int32_t Shorthand::FindBestTarget(actioninfo_t* action)
 		// Check target..
 		int targetStatus = m_AshitaCore->GetMemoryManager()->GetTarget()->GetIsSubTargetActive();
 		int targetIndex = m_AshitaCore->GetMemoryManager()->GetTarget()->GetTargetIndex(targetStatus);
-		if (IsValidTarget(validFlags, targetIndex))
+		if (IsValidTarget(validFlags, targetIndex, true))
 			return targetIndex;
 
 		// Check self..
@@ -481,7 +481,7 @@ int32_t Shorthand::FindBestTarget(actioninfo_t* action)
 		int32_t target = atoi(action->Target.c_str());
         if ((target > 0) && (target < 2304))
         {
-            if (IsValidTarget(validFlags, target))
+            if (IsValidTarget(validFlags, target, false))
                 return target;
         }
 
@@ -489,7 +489,7 @@ int32_t Shorthand::FindBestTarget(actioninfo_t* action)
 		for (int x = 0; x < 0x900; x++)
 		{
 			if ((m_AshitaCore->GetMemoryManager()->GetEntity()->GetServerId(x) == target)
-				&& (IsValidTarget(validFlags, x))) return x;
+				&& (IsValidTarget(validFlags, x, false))) return x;
 		}
 	}
 
@@ -500,7 +500,7 @@ int32_t Shorthand::FindBestTarget(actioninfo_t* action)
 
 	for (int x = 1; x < 0x900; x++)
 	{
-		if (IsValidTarget(validFlags, x))
+		if (IsValidTarget(validFlags, x, false))
 		{
 			const char* name = m_AshitaCore->GetMemoryManager()->GetEntity()->GetName(x);
 			const char* check = strcasestr(name, action->Target.c_str());
